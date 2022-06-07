@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initiative-tracker
+  labels:
+    app: initiative-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: initiative-tracker
+  template:
+    metadata:
+      labels:
+        app: initiative-tracker
+    spec:
+      containers:
+      - name: initiative-tracker
+        image: initiative-tracker
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: initiative-tracker
+  labels:
+    app: initiative-tracker
+spec:
+  selector:
+    app: initiative-tracker
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

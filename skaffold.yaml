@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2beta28
+kind: Config
+metadata:
+  name: initiative-tracker
+build:
+  artifacts:
+  - image: initiative-tracker
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes.yaml
