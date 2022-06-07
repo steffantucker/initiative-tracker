@@ -9,14 +9,17 @@ import (
 
 // Actors holds array of players and monsters
 type Actors struct {
+	// TODO: create and use an interface instead
 	actors []actor.Actor
 	turn   int
 }
 
 // New instantiates the actors
-func (a *Actors) New() {
-	a.actors = []actor.Actor{}
-	a.turn = 0
+func NewActorsContainer() *Actors {
+	return &Actors{
+		actors: []actor.Actor{},
+		turn:   0,
+	}
 }
 
 // Add to add an actor to the encounter
