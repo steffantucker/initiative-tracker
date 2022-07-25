@@ -1,32 +1,31 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"flag"
 	"net/http"
 
-	"github.com/steffantucker/initiative-tracker/actors"
+	log "github.com/sirupsen/logrus"
+	"github.com/steffantucker/initiative-tracker/handlers"
+	"github.com/steffantucker/initiative-tracker/rooms"
+	"github.com/steffantucker/initiative-tracker/users"
 )
 
-var combatents actors.Actors
-
-func turnSSEHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/event-stream")
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Connection", "keep-alive")
-
-	fmt.Fprintf(w, "data: %v\n\n", combatents.Current().JSON())
-}
+var addr = flag.String("address", ":8080", "address to serve on")
+var debug = flag.Bool("debug", false, "enable debug logging")
 
 func main() {
-	combatents.New()
+	flag.Parse()
+	if *debug {
+		log.SetLevel(log.DebugLevel)
+	}
+
+	roomCodeGen := rooms.NewRoomCodesCache()
+	userTokenGen := users.NewUserTokensCache()
 
 	http.Handle("/", http.FileServer(http.Dir("www")))
-	http.HandleFunc("/public", turnSSEHandler)
-	http.HandleFunc("/next", nextHandler)
-	http.HandleFunc("/new", newHandler)
-	http.HandleFunc("/get", getHandler)
-	http.HandleFunc("/end", endHandler)
+	http.Handle("/newroom", handlers.RoomsHandler(roomCodeGen, userTokenGen))
+	http.Handle("/ws", handlers.WebsocketHandler(roomCodeGen, userTokenGen))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.WithField("address", *addr).Info("Starting server")
+	log.Fatal(http.ListenAndServe(*addr, nil))
 }
