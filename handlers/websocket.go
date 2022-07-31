@@ -23,7 +23,12 @@ func WebsocketHandler(roomsList rooms.RoomsContainer, tokens users.UserTokens) h
 			return
 		}
 
+		valid := tokens.ValidToken(users.UserToken(token))
 		room := roomsList.GetRoom(rooms.RoomCode(code))
+		if room == nil || !valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {

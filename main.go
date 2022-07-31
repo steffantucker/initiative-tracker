@@ -19,12 +19,13 @@ func main() {
 		log.SetLevel(log.DebugLevel)
 	}
 
-	roomCodeGen := rooms.NewRoomCodesCache()
+	roomsInterface := rooms.NewRoomCodesCache()
 	userTokenGen := users.NewUserTokensCache()
 
 	http.Handle("/", http.FileServer(http.Dir("www")))
-	http.Handle("/newroom", handlers.RoomsHandler(roomCodeGen, userTokenGen))
-	http.Handle("/ws", handlers.WebsocketHandler(roomCodeGen, userTokenGen))
+	http.Handle("/room/new", handlers.NewRoomHandler(roomsInterface, userTokenGen))
+	http.Handle("/room/join", handlers.JoinRoomHandler(roomsInterface, userTokenGen))
+	http.Handle("/ws", handlers.WebsocketHandler(roomsInterface, userTokenGen))
 
 	log.WithField("address", *addr).Info("Starting server")
 	log.Fatal(http.ListenAndServe(*addr, nil))

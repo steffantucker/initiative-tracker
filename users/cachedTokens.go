@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"strings"
 	"sync"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -33,13 +34,8 @@ func NewUserTokensCache() *UserTokensCache {
 
 func (u *UserTokensCache) NewToken() UserToken {
 	u.m.Lock()
-	token := newToken()
-	_, ok := u.tokens[token]
-	for ok {
-		token = newToken()
-		_, ok = u.tokens[token]
-	}
-
+	token := newUniqueToken(u.tokens)
+	token = UserToken("p-" + string(token))
 	u.tokens[token] = &user{token: token, userType: PlayerUserType}
 	u.m.Unlock()
 
@@ -49,18 +45,30 @@ func (u *UserTokensCache) NewToken() UserToken {
 }
 
 func (u *UserTokensCache) NewDMToken() UserToken {
-	t := u.NewToken()
 	u.m.Lock()
-	u.tokens[t].userType = DMUserType
+	token := newUniqueToken(u.tokens)
+	token = UserToken("dm-" + string(token))
+	u.tokens[token] = &user{token: token, userType: DMUserType}
 	u.m.Unlock()
 
-	log.WithField("token", t).Debug("Generated new DM token")
+	log.WithField("token", token).Debug("Generated new DM token")
 
-	return t
+	return token
+}
+
+func newUniqueToken(tokens map[UserToken]*user) UserToken {
+	token := newToken()
+	_, ok := tokens[token]
+	for ok {
+		token = newToken()
+		_, ok = tokens[token]
+	}
+	return token
 }
 
 func newToken() UserToken {
 	token := strings.Builder{}
+	rand.Seed(time.Now().Unix())
 	token.Grow(tokenLength)
 	for i := 0; i < 7; i++ {
 		r := rand.Intn(len(key))

@@ -34,13 +34,7 @@ func (r *Rooms) NewRoom() Room {
 		_, ok = r.rooms[code]
 	}
 
-	newRoom := &Room{
-		Code:       code,
-		Players:    map[*Player]bool{},
-		Register:   make(chan *Player),
-		Unregister: make(chan *Player),
-		Broadcast:  make(chan []byte),
-	}
+	newRoom := NewRoom(code)
 	r.rooms[code] = newRoom
 	r.m.Unlock()
 	log.WithField("code", code).Debug("Generated room code")
@@ -51,7 +45,7 @@ func (r *Rooms) NewRoom() Room {
 func newCode() RoomCode {
 	code := strings.Builder{}
 	code.Grow(codeLength)
-	rand.Seed(time.Hour.Nanoseconds())
+	rand.Seed(time.Now().Unix())
 	for i := 0; i < codeLength; i++ {
 		r := rand.Intn(len(key))
 		code.WriteByte(key[r])
