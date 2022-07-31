@@ -1,17 +1,16 @@
 package users
 
 import (
-	"math/rand"
-	"strings"
 	"sync"
-	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/steffantucker/initiative-tracker/uidgenerator"
 )
 
 type (
 	UserTokensCache struct {
 		tokens map[UserToken]*user
+		gen    uidgenerator.Generator
 		m      sync.Mutex
 	}
 
@@ -21,21 +20,16 @@ type (
 	}
 )
 
-const (
-	tokenLength = 7
-	key         = "123456789ABCDEFGHLJKMNPQRSTUVWXYZ"
-)
-
-func NewUserTokensCache() *UserTokensCache {
+func NewUserTokensCache(gen uidgenerator.Generator) *UserTokensCache {
 	return &UserTokensCache{
 		tokens: make(map[UserToken]*user),
+		gen:    gen,
 	}
 }
 
 func (u *UserTokensCache) NewToken() UserToken {
 	u.m.Lock()
-	token := newUniqueToken(u.tokens)
-	token = UserToken("p-" + string(token))
+	token := UserToken(u.gen.NewUID("p-"))
 	u.tokens[token] = &user{token: token, userType: PlayerUserType}
 	u.m.Unlock()
 
@@ -46,35 +40,13 @@ func (u *UserTokensCache) NewToken() UserToken {
 
 func (u *UserTokensCache) NewDMToken() UserToken {
 	u.m.Lock()
-	token := newUniqueToken(u.tokens)
-	token = UserToken("dm-" + string(token))
+	token := UserToken(u.gen.NewUID("dm-"))
 	u.tokens[token] = &user{token: token, userType: DMUserType}
 	u.m.Unlock()
 
 	log.WithField("token", token).Debug("Generated new DM token")
 
 	return token
-}
-
-func newUniqueToken(tokens map[UserToken]*user) UserToken {
-	token := newToken()
-	_, ok := tokens[token]
-	for ok {
-		token = newToken()
-		_, ok = tokens[token]
-	}
-	return token
-}
-
-func newToken() UserToken {
-	token := strings.Builder{}
-	rand.Seed(time.Now().Unix())
-	token.Grow(tokenLength)
-	for i := 0; i < 7; i++ {
-		r := rand.Intn(len(key))
-		token.WriteByte(key[r])
-	}
-	return UserToken(token.String())
 }
 
 func (u *UserTokensCache) ValidToken(t UserToken) bool {

@@ -15,7 +15,7 @@ type (
 		m         sync.Mutex
 		turnOrder *list.List
 		current   *list.Element
-		uidgen    *uidgenerator.Generator
+		uidgen    uidgenerator.Generator
 		TurnCount int     `json:"turnCounter"`
 		OrderList []Actor `json:"order"`
 		Current   string  `json:"currentID"`
@@ -37,7 +37,7 @@ type (
 	}
 )
 
-func NewTracker(gen *uidgenerator.Generator) *Tracker {
+func NewTracker(gen uidgenerator.Generator) *Tracker {
 	return &Tracker{
 		turnOrder: list.New(),
 		uidgen:    gen,

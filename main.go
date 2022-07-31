@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/steffantucker/initiative-tracker/handlers"
 	"github.com/steffantucker/initiative-tracker/rooms"
+	"github.com/steffantucker/initiative-tracker/uidgenerator"
 	"github.com/steffantucker/initiative-tracker/users"
 )
 
@@ -18,9 +19,10 @@ func main() {
 	if *debug {
 		log.SetLevel(log.DebugLevel)
 	}
+	gen := uidgenerator.NewShortCodeGenerator("")
 
-	roomsInterface := rooms.NewRoomCodesCache()
-	userTokenGen := users.NewUserTokensCache()
+	roomsInterface := rooms.NewRoomCodesCache(gen)
+	userTokenGen := users.NewUserTokensCache(gen)
 
 	http.Handle("/", http.FileServer(http.Dir("www")))
 	http.Handle("/room/new", handlers.NewRoomHandler(roomsInterface, userTokenGen))

@@ -1,36 +1,35 @@
 package rooms
 
 import (
-	"math/rand"
-	"strings"
 	"sync"
-	"time"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/steffantucker/initiative-tracker/uidgenerator"
 )
 
 type (
 	Rooms struct {
 		rooms map[RoomCode]*Room
+		gen   uidgenerator.Generator
 		m     sync.Mutex
 	}
 )
 
-const (
-	codeLength = 4
-	key        = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-)
+const ()
 
-func NewRoomCodesCache() *Rooms {
-	return &Rooms{rooms: make(map[RoomCode]*Room)}
+func NewRoomCodesCache(gen uidgenerator.Generator) *Rooms {
+	return &Rooms{
+		rooms: make(map[RoomCode]*Room),
+		gen:   gen,
+	}
 }
 
 func (r *Rooms) NewRoom() Room {
 	r.m.Lock()
-	code := newCode()
+	code := RoomCode(r.gen.NewUID("r-"))
 	_, ok := r.rooms[code]
 	for ok {
-		code = newCode()
+		code = RoomCode(r.gen.NewUID("r-"))
 		_, ok = r.rooms[code]
 	}
 
@@ -40,17 +39,6 @@ func (r *Rooms) NewRoom() Room {
 	log.WithField("code", code).Debug("Generated room code")
 
 	return *r.rooms[code]
-}
-
-func newCode() RoomCode {
-	code := strings.Builder{}
-	code.Grow(codeLength)
-	rand.Seed(time.Now().Unix())
-	for i := 0; i < codeLength; i++ {
-		r := rand.Intn(len(key))
-		code.WriteByte(key[r])
-	}
-	return RoomCode(code.String())
 }
 
 func (r *Rooms) ValidRoom(room RoomCode) bool {
