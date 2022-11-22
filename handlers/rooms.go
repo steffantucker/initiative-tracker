@@ -18,6 +18,8 @@ type JoinRoomResponse struct {
 	Token string `json:"token"`
 }
 
+// NewRoomHandler creates a new room and token for the DM. Subsequent calls
+// must include a token and the DM token grants greater access than other tokens.
 func NewRoomHandler(roomCodeGen rooms.RoomsContainer, dmTokenGen users.UserTokens) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		room := roomCodeGen.NewRoom()
@@ -40,12 +42,14 @@ func NewRoomHandler(roomCodeGen rooms.RoomsContainer, dmTokenGen users.UserToken
 	}
 }
 
+// JoinRoomHandler generates a user token for the provided room. Returns a HTTP
+// 404 Not Found error if the room code is not valid
 func JoinRoomHandler(roomsInterface rooms.RoomsContainer, tokenGen users.UserTokens) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := rooms.RoomCode(r.FormValue("code"))
 		valid := roomsInterface.ValidRoom(code)
 		if !valid {
-			w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusNotFound)
 			// TODO: return error
 			return
 		}

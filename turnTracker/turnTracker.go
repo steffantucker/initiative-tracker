@@ -112,17 +112,8 @@ func (t *Tracker) Clear() {
 	t.turnOrder.Init()
 }
 
-func (t *Tracker) AddActor(name string, ac, currhp, maxhp int, token string) error {
-	actor := Actor{
-		ID:   t.uidgen.NewUID("a-"),
-		Name: name,
-		AC:   ac,
-		HP: Hitpoints{
-			Current: currhp,
-			Max:     maxhp,
-		},
-		playerToken: token,
-	}
+func (t *Tracker) AddActor(actor Actor) error {
+	actor.ID = t.uidgen.NewUID("a-")
 	t.m.Lock()
 	defer t.m.Unlock()
 	if t.turnOrder.Len() == 0 {

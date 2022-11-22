@@ -15,6 +15,11 @@ var upgrader = websocket.Upgrader{
 
 func WebsocketHandler(roomsList rooms.RoomsContainer, tokens users.UserTokens) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		code := r.FormValue("code")
 		token := r.Header.Get("X-Token")
 
@@ -36,6 +41,7 @@ func WebsocketHandler(roomsList rooms.RoomsContainer, tokens users.UserTokens) h
 			return
 		}
 
+		// TODO: RegisterOnShutdown notification
 		room.AddPlayerConnection(users.UserToken(token), conn)
 	}
 }

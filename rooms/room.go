@@ -48,9 +48,9 @@ func (r *Room) Run() {
 				r.DM = nil
 			} else {
 				delete(r.Players, p)
-				if len(r.Players) == 0 && r.DM == nil {
-					return
-				}
+			}
+			if len(r.Players) == 0 && r.DM == nil {
+				return
 			}
 		case m := <-r.Messages:
 			log.Debug(m)
