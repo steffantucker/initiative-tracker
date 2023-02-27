@@ -1,0 +1,38 @@
+.actor {
+  font-family: monospace;
+  width: 320px;
+  color: #dbdbdb;
+}
+
+.accordion {
+  --fw-accordion-title-background-color: #aea2ff66;
+  --fw-accordion-body-background-color: #aea2ff66;
+  --fw-accordion-border: none;
+}
+
+.title {
+  width: 100%;
+  flex-direction: row;
+}
+
+.initiative {
+  align-self: flex-end;
+}
+
+h1 {
+  font-weight:bolder;
+  font-size: 20px;
+  line-height: 1;
+  margin: 6px 0 6px 10px;
+  display: inline-block;
+  vertical-align: top;
+  letter-spacing: 7%;
+}
+
+.current {
+  --fw-accordion-border: solid 2px #9DACFF;
+}
+
+.notcurrent {
+  padding: 2px;
+}

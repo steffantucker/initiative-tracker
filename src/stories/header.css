@@ -1,0 +1,28 @@
+.wrapper {
+  font-family: monospace;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #aea2ff66;
+  color: #dbdbdb;
+}
+
+h1 {
+  font-weight:bolder;
+  font-size: 20px;
+  line-height: 1;
+  margin: 6px 0 6px 10px;
+  display: inline-block;
+  vertical-align: top;
+  letter-spacing: 7%;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+.welcome {
+  font-size: 14px;
+  margin-right: 10px;
+}
