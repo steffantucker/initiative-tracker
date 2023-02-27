@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
 	"github.com/steffantucker/initiative-tracker/rooms"
 	"github.com/steffantucker/initiative-tracker/users"
 )
@@ -38,6 +39,8 @@ func NewRoomHandler(roomCodeGen rooms.RoomsContainer, dmTokenGen users.UserToken
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(bytes)
 
+		logrus.Debug("Created room", data.Code, data.DMToken)
+
 		go room.Run() //TODO: find way to remove room
 	}
 }
@@ -60,6 +63,8 @@ func JoinRoomHandler(roomsInterface rooms.RoomsContainer, tokenGen users.UserTok
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
+
+		logrus.Debug("Joined room", code, token)
 
 		w.Write(data)
 	}

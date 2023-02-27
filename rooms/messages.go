@@ -74,7 +74,8 @@ func (m MessageProcessor) processActorMessage(function string, data any) error {
 		if !ok {
 			return ErrBadData
 		}
-		return m.TurnTracker.AddActor(actor)
+		m.TurnTracker.AddActor(actor)
+		return nil
 	case "Update":
 		updates, ok := data.(map[string]any)
 		if !ok {

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"github.com/steffantucker/initiative-tracker/users"
 )
@@ -57,6 +58,7 @@ func (p *Player) readPump() {
 	for {
 		var m interface{}
 		err := p.conn.ReadJSON(&m)
+		logrus.Debug("Received message", m)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.WithFields(log.Fields{"code": p.room.Code, "token": p.token}).Warn("unexpected ws closure")

@@ -26,6 +26,8 @@ func NewShortCodeGenerator(key string) Generator {
 		key = defaultkey
 	}
 
+	rand.Seed(int64(time.Now().Nanosecond()))
+
 	return &ShortCodeGenerator{
 		usedCodes: make(map[string]bool),
 		key:       key,
@@ -43,12 +45,12 @@ func (g *ShortCodeGenerator) NewUIDWithLength(l int, pre string) string {
 		token = pre + generateUID(l, g.key)
 		_, ok = g.usedCodes[token]
 	}
+	g.usedCodes[token] = true
 	return token
 }
 
 func generateUID(l int, key string) string {
 	token := strings.Builder{}
-	rand.Seed(time.Now().Unix())
 	token.Grow(l)
 	for i := 0; i < l; i++ {
 		r := rand.Intn(len(key))
