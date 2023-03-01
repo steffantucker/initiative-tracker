@@ -7,7 +7,7 @@ export const Header = ({ room, user, onLogin, onLogout, onEditAccount }) => (
   <header>
     <div className="wrapper">
       <div>
-        <h1>{room ? room.code : "i-t"}</h1>
+        <h1>{room ? room.code : <span className="logo"><span className="turns">turns</span><span className='fyi'>fyi</span></span>}</h1>
       </div>
       <div>
         {user ? (

@@ -1,4 +1,4 @@
-# Initiative Tracker
+# turns.fyi
 DM portal is where you can edit and add players/monsters, and move on through turns.
 
 Player portal displays the current player/monsters turn.

@@ -1,8 +1,48 @@
 html, body {
 	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
 	font-weight: 400;
+  color: #dbdbdb;
 }
 
 h1 {
 	text-align: center;
+}
+
+.actor-card {
+  font-family: monospace;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1em;
+}
+
+.actor-card .title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.actor-card .body {
+  display: flex;
+  flex-direction: column;
+  align-items: self-end;
+}
+
+.actor-card.current {
+  border: solid 2px #9DACFF;
+  border-radius: .5em;
+}
+
+.actor-card.notcurrent {
+  border: solid 2px #dbdbdb;
+  border-radius: .5em;
+}
+
+.actor-card input[type=number] {
+  width: 4em;
+}
+
+.empty-list {
+  width: 100%;
+  padding: 3em 1em;
+  text-align: center;
 }

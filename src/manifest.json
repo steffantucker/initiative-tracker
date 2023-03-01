@@ -1,6 +1,6 @@
 {
-  "name": "initiative-tracker",
-  "short_name": "initiative-tracker",
+  "name": "turns.fyi",
+  "short_name": "turns.fyi",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -1,7 +1,7 @@
-import { Header } from './Header';
+import { Header } from '../components/Header';
 
 export default {
-  title: 'i-t/Header',
+  title: 'turns.fyi/Header',
   component: Header,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/7.0/preact/writing-docs/docs-page
   tags: ['autodocs'],

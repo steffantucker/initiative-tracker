@@ -18,6 +18,7 @@
     "build/*"
   ],
   "devDependencies": {
+    "@babel/core": "7",
     "@storybook/addon-essentials": "7.0.0-beta.54",
     "@storybook/addon-interactions": "7.0.0-beta.54",
     "@storybook/addon-links": "7.0.0-beta.54",
@@ -32,14 +33,10 @@
     "react-dom": "17.0.0",
     "sirv-cli": "^1.0.3",
     "storybook": "7.0.0-beta.54",
-    "typescript": "3.9.7",
-    "@babel/core": "7"
+    "typescript": "3.9.7"
   },
   "dependencies": {
-    "@freshworks/crayons": "v4",
     "preact": "^10.1.0",
-    "preact-render-to-string": "^5.1.2",
-    "rollup": "2",
-    "yup": "0.32.11"
+    "preact-render-to-string": "^5.1.2"
   }
 }

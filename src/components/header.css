@@ -1,3 +1,13 @@
+.logo.turns {
+  font-weight: light;
+  font-size: smaller;
+}
+
+.logo.fyi {
+  font-weight: bold;
+  font-size: larger;
+}
+
 .wrapper {
   font-family: monospace;
   padding: 15px 20px;
