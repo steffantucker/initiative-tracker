@@ -1,25 +1,16 @@
 import PropTypes from 'prop-types';
 
 import { Button } from './Button';
-import './header.css';
-
-export const Header = ({ room, user, onLogin, onLogout, onEditAccount }) => (
+// TODO: move buttons to only when there is a room code
+export const Header = ({ room, user, onLogout, onEditAccount }) => (
   <header>
     <div className="wrapper">
       <div>
-        <h1>{room ? room.code : <span className="logo"><span className="turns">turns</span><span className='fyi'>fyi</span></span>}</h1>
+        <h1>{room ? room : <span className="logo"><span className="turns">turns</span><span className='fyi'>fyi</span></span>}</h1>
       </div>
       <div>
-        {user ? (
-          <>
-            <Button primary size="small" onClick={onEditAccount} label={user.name} />
+            <Button primary size="small" onClick={onEditAccount} label='name' />
             <Button size="small" onClick={onLogout} label="exit" />
-          </>
-        ) : (
-          <>
-            <Button primary size="small" onClick={onLogin} label="enter" />
-          </>
-        )}
       </div>
     </div>
   </header>

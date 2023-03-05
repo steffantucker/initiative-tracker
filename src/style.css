@@ -1,11 +1,77 @@
+:root {
+  --background: #0c0910;
+  --font: #9cafb7;
+  --button: #453750;
+  --accent: #f4a698;
+  --oddone: #ace894;
+}
+
 html, body {
 	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
 	font-weight: 400;
-  color: #dbdbdb;
+  color: var(--font);
+  background-color: var(--background);
 }
 
 h1 {
 	text-align: center;
+}
+
+.logo.turns {
+  font-weight: light;
+  font-size: smaller;
+}
+
+.logo.fyi {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.wrapper {
+  font-family: monospace;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wrapper > h1 {
+  font-weight:bolder;
+  font-size: 20px;
+  line-height: 1;
+  margin: 6px 0 6px 10px;
+  display: inline-block;
+  vertical-align: top;
+  letter-spacing: 7%;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+.welcome {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.roomlogin {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.roomlogin > * {
+  width: 140px;
+}
+
+.roomlogin > input[type="text"] {
+  font-size: 14px;
+  padding: 11px 20px;
+  text-align: center;
 }
 
 .actor-card {
@@ -28,12 +94,12 @@ h1 {
 }
 
 .actor-card.current {
-  border: solid 2px #9DACFF;
+  border: solid 2px var(--oddone);
   border-radius: .5em;
 }
 
 .actor-card.notcurrent {
-  border: solid 2px #dbdbdb;
+  border: solid 2px var(--background);
   border-radius: .5em;
 }
 
@@ -42,7 +108,36 @@ h1 {
 }
 
 .empty-list {
-  width: 100%;
+  box-sizing: border-box;
   padding: 3em 1em;
   text-align: center;
+}
+
+.button {
+  font-family: monospace;
+  font-weight: 700;
+  border: solid 1px var(--accent);
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1;
+  box-shadow: var(--accent) 5px 5px 0px -2px;
+}
+.button--primary {
+  background-color: var(--button);
+}
+.button--secondary {
+  background-color: transparent;
+  color: var(--font);
+}
+.button--small {
+  font-size: 12px;
+  padding: 10px 16px;
+}
+.button--medium {
+  font-size: 14px;
+  padding: 11px 20px;
+}
+.button--large {
+  font-size: 16px;
+  padding: 12px 24px;
 }

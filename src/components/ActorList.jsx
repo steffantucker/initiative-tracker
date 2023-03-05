@@ -1,33 +1,32 @@
-import { useState } from 'preact/hooks'
-import PropTypes from 'prop-types';
 import { ActorCard } from './ActorCard';
+import { Button } from './Button';
 
-export function ActorList({initialActors}) {
-    if (initialActors == null) {
+export function ActorList({ state, dispatch }) {
+
+    const onEdit = (actor) => {
+        dispatch({type: 'updateActor', value: actor});
+    }
+    
+    const onRemove = (actor) => {
+        dispatch({type: 'removeActor', value: actor.id});
+    }
+
+    if (state.actors.length === 0) {
         return (
             <div className='empty-list'>nothing to show</div>
         )
     }
-    const [actors, setNewActors] = useState(initialActors)
+
+    let actors = state.actors.slice(state.currentTurnIndex)
+    if (state.currentTurnIndex > 0) actors.push(...state.actors.slice(0, state.currentTurnIndex))
     console.log(actors)
-
-    const onEdit = (actor) => {
-        console.log(actor)
-        const newActors = actors.slice()
-        const i = newActors.findIndex((a) => a.actor.id == actor.id)
-        console.log(i)
-        newActors[i].actor = actor
-        console.log(newActors)
-        setNewActors(newActors)
-    }
-
     return (
         <div className='actor-list'>
-            {actors.map((a) => <ActorCard actor={a.actor} isCurrent={a.isCurrent} onEdit={onEdit} />)}
+            {actors.map((a) => <ActorCard id={a.id} actor={a} isCurrent={a.id === state.currentActorID} onEdit={onEdit} onRemove={onRemove} />)}
+            <Button label='Next' size='small' onClick={() => dispatch({type: 'nextTurn'})}/>
         </div>
     )
 }
 
 ActorList.PropTypes = {
-    actors: PropTypes.array.isRequired,
 }
