@@ -21,17 +21,23 @@ export const TestState = {
     roomCode: 'dOxl'
 }
 
+function sortActors(actors) {
+    return actors.sort((a, b) => b.initiative - a.initiative)
+}
+
 export function TurnsReducer(state, action) {
-    console.log('reducer action:' + action)
     switch (action.type) {
         case 'addActor':
-            return {...state, actors: [...state.actors, action.value].sort((a, b) => b.initiative - a.initiative)};
+            return {...state, actors: sortActors([...state.actors, action.value])};
         case 'addActors':
-            return {...state, actors: [...state.actors, ...action.value].sort((a, b) => b.initiative - a.initiative)};
+            return {...state, actors: sortActors([...state.actors, ...action.value])};
         case 'removeActor':
             return {...state, actors: state.actors.filter(a => a.id !== action.value)};
         case 'updateActor':
-            return {...state, actors: state.actors.filter(a => a.id !== action.value.id).push(action.value).sort((a, b) => b.initiative - a.initiative)}
+            const newActors = state.actors.filter(a => a.id !== action.value.id);
+            newActors.push(action.value);
+            sortActors(newActors);
+            return {...state, actors: newActors, currentActorID: newActors[state.currentTurnIndex].id}
         case 'nextTurn':
             const nextIndex = (state.currentTurnIndex + 1) % state.actors.length
             return {...state, currentTurnIndex: nextIndex, currentActorID: state.actors[nextIndex].id};
@@ -43,7 +49,7 @@ export function TurnsReducer(state, action) {
         case 'enterroom':
             return {...TurnsInitialState, roomCode: action.value};
         case 'leaveroom':
-            return {TurnsInitialState};
+            return {...TurnsInitialState};
     }
     throw Error('Undefined action ' + action.type)
 }

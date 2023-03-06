@@ -13,6 +13,8 @@ export function ActorCard({ actor, isCurrent, onEdit }) {
       initiative: 0,
     };
   }
+
+  // TODO: figure out expanding
   const [isExpanded, setExpanded] = useState(true);
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(actor.name);
@@ -21,11 +23,6 @@ export function ActorCard({ actor, isCurrent, onEdit }) {
   const [newCurrHP, setNewCurrHP] = useState(actor.currentHitPoints);
   const [newMaxHP, setNewMaxHP] = useState(actor.maxHitPoints);
   const mode = isCurrent ? 'current' : 'notcurrent';
-
-  const handleDoubleClick = () => {
-    console.log("dblclck")
-    setEditing(true);
-  };
 
   const handleSave = () => {
     const updatedCharacter = {
@@ -48,48 +45,39 @@ export function ActorCard({ actor, isCurrent, onEdit }) {
     setNewInit(actor.initiative);
     setEditing(false);
   };
+
+  const handleChange = (setter) => {
+    return (e) => {
+      setter(e.target.innerText)
+    }
+  };
+
+  const handleNumberChange = (setter) => {
+    return (e) => {
+      setter(Number(e.target.innerText))
+    }
+  };
+
   return (
-    <div className={`actor-card ${mode}`} onDoubleClick={handleDoubleClick}>
+    <div className={`actor-card ${mode}`}>
+      <div className='title'>
+        <span id={`name-${actor.id}`} className='name' contenteditable={editing} onBlur={handleChange(setNewName)}>{actor.name}</span>
+        <span className='initiative' contenteditable={editing} onBlur={handleNumberChange(setNewInit)}>{actor.initiative}</span>
+      </div>
+      {isExpanded && (
+        <div className='body'>
+          <span><span contenteditable={editing} onBlur={handleNumberChange(setNewCurrHP)} tagName='span'>{actor.currentHitPoints}</span>/<span contenteditable={editing} onBlur={handleNumberChange(setNewMaxHP)} tagName='span'>{actor.maxHitPoints}</span></span>
+          <span contenteditable={editing} onBlur={handleNumberChange(setNewAC)}>{actor.armorClass}</span>
+        </div>
+      )}
       {editing ? (
-        <div>
-          <div className='title'>
-            <input id={`name-${actor.id}`} type="text" value={newName} onChange={(e) => setNewName(e.target.value)} />
-            <input id={`ac-${actor.id}`} type="number" value={newAC} onChange={(e) => setNewAC(parseInt(e.target.value, 10))} />
-          </div>
-          <div className='body'>
-            <span>
-              <input
-                id={`currhp-${actor.id}`}
-                type="number"
-                value={newCurrHP}
-                onChange={(e) => setNewCurrHP(parseInt(e.target.value, 10))}
-              />
-              /
-              <input
-                id={`maxhp-${actor.id}`}
-                type="number"
-                value={newMaxHP}
-                onChange={(e) => setNewMaxHP(parseInt(e.target.value, 10))}
-              />
-            </span>
-            <input id={`init-${actor.id}`} type="number" value={newInit} onChange={(e) => setNewInit(parseInt(e.target.value, 10))} />
-          </div>
-          <Button onClick={handleSave} label='Save' size='small' />
-          <Button onClick={handleCancel} label='Cancel' size='small' />
-        </div>
+        <>
+          // TODO: make these buttons icons
+          <Button primary size='small' onClick={handleSave} label='save' />
+          <Button size='small' onClick={handleCancel} label='cancel' />
+        </>
       ) : (
-        <div onClick={() => setExpanded(ex => !ex)}>
-          <div className='title'>
-            <span className='name'>{actor.name}</span>
-            <span className='initiative'>{actor.initiative}</span>
-          </div>
-          {isExpanded && (
-            <div className='body'>
-              <span>{actor.currentHitPoints}/{actor.maxHitPoints}</span>
-              <span>{actor.armorClass}</span>
-            </div>
-          )}
-        </div>
+        <Button size='small' onClick={() => setEditing(true)} label='edit' />
       )}
     </div>
   );

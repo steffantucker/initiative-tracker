@@ -1,8 +1,12 @@
 {
   "private": true,
-  "name": "initiative-tracker",
-  "version": "0.0.0",
-  "license": "MIT",
+  "name": "turns.fyi",
+  "version": "0.0.1",
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "github:steffantucker/initiative-tracker"
+  },
   "scripts": {
     "build": "preact build",
     "serve": "sirv build --port 8080 --cors --single",
@@ -40,7 +44,6 @@
   "dependencies": {
     "peerjs": "^1.4.7",
     "preact": "^10.1.0",
-    "preact-render-to-string": "^5.1.2",
-    "react-controlled-contenteditable": "^0.19.4"
+    "preact-render-to-string": "^5.1.2"
   }
 }
