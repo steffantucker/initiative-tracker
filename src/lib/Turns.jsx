@@ -7,6 +7,7 @@ export const TurnsInitialState = {
     currentTurnIndex: 0,
     currentActorID: 0,
     roomCode: '',
+    nextID: 0
 }
 
 export const TestState = {
@@ -18,7 +19,8 @@ export const TestState = {
     ], 
     currentActorID: 5, 
     currentTurnIndex: 0,
-    roomCode: 'dOxl'
+    roomCode: 'dOxl',
+    nextID: 6
 }
 
 function sortActors(actors) {
@@ -28,9 +30,11 @@ function sortActors(actors) {
 export function TurnsReducer(state, action) {
     switch (action.type) {
         case 'addActor':
-            return {...state, actors: sortActors([...state.actors, action.value])};
-        case 'addActors':
-            return {...state, actors: sortActors([...state.actors, ...action.value])};
+            // TODO: move id logic to WebRTC code
+            let newActor = {...action.value, id: state.nextID}
+            return {...state, actors: sortActors([...state.actors, newActor]), nextID: state.nextID + 1};
+        case 'loadActors':
+            return {...state, actors: sortActors([...action.value])};
         case 'removeActor':
             return {...state, actors: state.actors.filter(a => a.id !== action.value)};
         case 'updateActor':

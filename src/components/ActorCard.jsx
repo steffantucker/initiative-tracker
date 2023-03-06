@@ -2,21 +2,23 @@ import { useState } from 'preact/hooks'
 import PropTypes from 'prop-types';
 import { Button } from './Button'
 
-export function ActorCard({ actor, isCurrent, onEdit }) {
+export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
+  let isNew = false;
   if (actor == null) {
     actor = {
       id: -1,
-      name: '',
+      name: 'name',
       armorClass: 0,
       currentHitPoints: 0,
       maxHitPoints: 0,
       initiative: 0,
     };
+    isNew = true;
   }
 
   // TODO: figure out expanding
   const [isExpanded, setExpanded] = useState(true);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(isNew);
   const [newName, setNewName] = useState(actor.name);
   const [newInit, setNewInit] = useState(actor.initiative);
   const [newAC, setNewAC] = useState(actor.armorClass);
@@ -73,8 +75,9 @@ export function ActorCard({ actor, isCurrent, onEdit }) {
       {editing ? (
         <>
           // TODO: make these buttons icons
+          <Button size='small' onClick={onRemove} label='remove' />
           <Button primary size='small' onClick={handleSave} label='save' />
-          <Button size='small' onClick={handleCancel} label='cancel' />
+          {!isNew && <Button size='small' onClick={handleCancel} label='cancel' />}
         </>
       ) : (
         <Button size='small' onClick={() => setEditing(true)} label='edit' />
