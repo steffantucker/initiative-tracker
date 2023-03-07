@@ -7,7 +7,7 @@ export function RoomLogin({ newRoom, enterRoom}) {
 
     return (
         <div className='roomlogin'>
-            <input id='roomcode' type='text' placeholder="room code" value={code} onChange={e => setCode(e.target.value)} />
+            <input id='roomcode' type='text' placeholder="room code" value={code} onInput={e => setCode(e.target.value)} />
             {code === '' ?
                 <Button label='New Room' onClick={newRoom} primary /> 
                 :

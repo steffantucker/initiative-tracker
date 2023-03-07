@@ -1,26 +1,30 @@
 import 'preact/debug'
 
 import { useReducer } from 'preact/hooks';
-import { TurnsInitialState, TestState, TurnsReducer } from './lib/Turns';
+import { TurnsInitialState, TurnsReducer } from './lib/Turns';
 import { Header } from './components/Header';
+import { LoginPage } from './pages/LoginPage';
+import { ActorPage } from './pages/ActorPage';
 
 import './style';
-import { LoginPage } from './pages/LoginPage';
-import { ActorList } from './components/ActorList';
+import { UserInitialState, UserReducer } from './lib/User';
 
 export default function App() {
-	const [turns, dispatch] = useReducer(TurnsReducer, TestState);
+	// TODO: move this to ActorPage?
+	const [turns, dispatch] = useReducer(TurnsReducer, TurnsInitialState);
+	const [user, userDispatch] = useReducer(UserReducer, UserInitialState);
+	if (user.room === 'tester' && turns.actors.length === 0) dispatch({type: 'enterroom', value: 'tester'})
 	return (
 		<>
-		{turns.roomCode ? 
+		{user.room ? 
 			<>
-				<Header room={turns.roomCode} onLogout={() => dispatch({type: 'leaveroom'})} />
-				<ActorList state={turns} dispatch={dispatch} />
+				<Header room={user.room} onLogout={() => userDispatch({type: 'leaveroom'})} />
+				<ActorPage turns={turns} dispatch={dispatch} isDM={user.isDM} />
 			</>
 			:
 			<>
 				<Header />
-				<LoginPage state={turns} dispatch={dispatch} />
+				<LoginPage state={user} dispatch={userDispatch} />
 			</>
 		}
 		</>
