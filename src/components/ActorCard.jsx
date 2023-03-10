@@ -65,6 +65,10 @@ export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
     }
   };
 
+  const handleRemove = () => {
+    onRemove(actor.id)
+  }
+
   return (
     <div className={`actor-card ${mode}`}>
       <div className='title'>
@@ -81,7 +85,7 @@ export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
       {editing ? (
         <>
           // TODO: make these buttons icons
-          <Button size='small' onClick={onRemove} label='remove' />
+          <Button size='small' onClick={handleRemove} label='remove' />
           <Button primary size='small' onClick={handleSave} label='save' />
           {!isNew && <Button size='small' onClick={handleCancel} label='cancel' />}
         </>

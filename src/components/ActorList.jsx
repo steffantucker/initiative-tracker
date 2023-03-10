@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { ActorCard } from './ActorCard';
 import { Button } from './Button';
 
-export function ActorList({ turns, onEdit, onNew, onRemove }) {
+export function ActorList({ turns, isDM, nextTurn, onEdit, onNew, onRemove }) {
     const [makeNew, setNew] = useState(false);
 
     if (turns.actors.length === 0) {
@@ -11,13 +11,21 @@ export function ActorList({ turns, onEdit, onNew, onRemove }) {
         )
     }
 
-    let actors = turns.actors.slice(turns.currentTurnIndex)
+    let actors = turns.actors.slice(turns.currentTurnIndex).filter((a) => isDM || !a.isHidden);
     if (turns.currentTurnIndex > 0) actors.push(...turns.actors.slice(0, turns.currentTurnIndex))
     return (
         // TODO: make this background different to differentiate each card
         <div className='actor-list'>
-            {actors.map((a) => <ActorCard key={`actor-${a.id}`} actor={a} isCurrent={a.id === turns.currentActorID} onEdit={onEdit} onRemove={onRemove(a.id)} />)}
-            <Button label='Next' size='small' onClick={() => dispatch({type: 'nextTurn'})}/>
+            {actors.map((a) => {
+                <ActorCard 
+                    key={`actor-${a.id}`} 
+                    actor={a} 
+                    isCurrent={a.id === turns.currentActorID} 
+                    onEdit={onEdit} 
+                    onRemove={onRemove(a.id)} />
+                })
+            }
+            <Button label='Next' size='small' onClick={nextTurn}/>
             <Button label='new' size='small' onClick={() => setNew(true)} />
             {makeNew && <ActorCard key='actor-new' onEdit={onNew} onRemove={() => setNew(false)} />}
         </div>
