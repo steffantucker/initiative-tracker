@@ -1,11 +1,15 @@
 import 'preact/debug'
+import { Provider } from 'react-redux';
 
-import { Turns } from './pages/Main'
+import { Main } from './pages/Main'
+import store from './store/store'
 import './style';
 
 export default function App() {
 	
 	return (
-		<Turns />
+		<Provider store={store}>
+			<Main />
+		</Provider>
 	);
 }

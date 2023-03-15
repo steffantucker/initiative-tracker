@@ -1,11 +1,11 @@
-import { RoomLogin } from '../components/RoomLogin'
+import { RoomLogin } from '../components/RoomLogin';
 
-export function LoginPage({ enterRoom, newRoom }) {
+export function LoginPage() {
 
     return (
         <>
             <div>Discription of what do</div>
-            <RoomLogin newRoom={newRoom} enterRoom={enterRoom} /> 
+            <RoomLogin /> 
         </>
     )
 }

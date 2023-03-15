@@ -1,10 +1,16 @@
 import { useState } from 'preact/hooks'
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { Button } from './Button'
+import { add, update, remove } from '../store/turns';
 
 // TODO: make class?
-export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
+export function ActorCard({ actor, isCurrent, onRemove }) {
+  const dispatch = useDispatch()
   let isNew = false;
+  let onEdit = (a) => dispatch(update(a));
+  if (onRemove === null) onRemove = (a) => dispatch(update(a));
+
   if (actor == null) {
     actor = {
       id: -1,
@@ -15,6 +21,7 @@ export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
       initiative: 0,
     };
     isNew = true;
+    onEdit = (a) => dispatch(add(a));
   }
 
   // TODO: figure out expanding
@@ -55,33 +62,75 @@ export function ActorCard({ actor, isCurrent, onEdit, onRemove }) {
 
   const handleChange = (setter) => {
     return (e) => {
-      setter(e.target.innerText)
+      setter(e.target.innerText);
     }
   };
 
   const handleNumberChange = (setter) => {
     return (e) => {
-      setter(Number(e.target.innerText))
+      setter(Number(e.target.innerText));
     }
   };
 
   const handleRemove = () => {
-    onRemove(actor.id)
+    onRemove(actor.id);
   }
 
   return (
     <div className={`actor-card ${mode}`}>
       <div className='title'>
-        <span id={`name-${actor.id}`} className='name' contenteditable={editing} onBlur={handleChange(setNewName)}>{actor.name}</span>
-        <span className='initiative' contenteditable={editing} onBlur={handleNumberChange(setNewInit)}>🎲{actor.initiative}</span>
+        <span 
+          id={`name-${actor.id}`} 
+          className='name' 
+          contenteditable={editing} 
+          onBlur={handleChange(setNewName)}
+        >
+          {actor.name}
+        </span>
+        <span>
+          🎲
+          <span 
+            className='initiative' 
+            contenteditable={editing} 
+            onBlur={handleNumberChange(setNewInit)}
+          >
+            {actor.initiative}
+          </span>
+        </span>
       </div>
-      {isExpanded && (
-        <div className='body'>
-          <span>💖<span contenteditable={editing} onBlur={handleNumberChange(setNewCurrHP)} tagName='span'>{actor.currentHitPoints}</span>/<span contenteditable={editing} onBlur={handleNumberChange(setNewMaxHP)} tagName='span'>{actor.maxHitPoints}</span></span>
-          <span contenteditable={editing} onBlur={handleNumberChange(setNewAC)}>🛡{actor.armorClass}</span>
-          <span><label for={`hidden-${actor.id}`}>hidden?</label><input type='checkbox' name={`hidden-${actor.id}`} id={`hidden-${actor.id}`} checked={isHidden} onChange={() => setHidden(!isHidden)} disabled={!editing} /></span>
-        </div>
-      )}
+      <div className='body'>
+        <span>
+          💖
+          <span 
+            contenteditable={editing} 
+            onBlur={handleNumberChange(setNewCurrHP)} 
+            tagName='span'
+          >
+            {actor.currentHitPoints}
+          </span>
+          /
+          <span 
+            contenteditable={editing} 
+            onBlur={handleNumberChange(setNewMaxHP)} 
+            tagName='span'
+          >
+            {actor.maxHitPoints}
+          </span>
+        </span>
+        <span>
+          🛡
+          <span 
+            contenteditable={editing} 
+            onBlur={handleNumberChange(setNewAC)}
+          >
+            {actor.armorClass}
+          </span>
+        </span>
+        <span>
+          <label for={`hidden-${actor.id}`}>hidden?</label>
+          <input type='checkbox' name={`hidden-${actor.id}`} id={`hidden-${actor.id}`} checked={isHidden} onChange={() => setHidden(!isHidden)} disabled={!editing} />
+        </span>
+      </div>
       {editing ? (
         <>
           // TODO: make these buttons icons
@@ -106,5 +155,5 @@ ActorCard.propTypes = {
     initiative: PropTypes.number.isRequired,
   }),
   isCurrent: PropTypes.bool,
-  onEdit: PropTypes.func.isRequired,
+  onEdit: PropTypes.func,
 };

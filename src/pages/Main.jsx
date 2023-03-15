@@ -1,36 +1,30 @@
 import { Component } from "preact";
-import usePeer from '../lib/usePeer';
-import { generateCode } from "../lib/Utils";
+import { useSelector } from "react-redux";
 import { Header } from '../components/Header';
 import { ActorList } from '../components/ActorList';
 import { LoginPage } from "./LoginPage";
 
-const TestState = {
-    actors: [
-        {id : 5, name : "Duv", armorClass : 10, initiative : 21, maxHitPoints : 40, currentHitPoints : 40, isHidden: false},
-        {id : 2, name : "Dav", armorClass : 10, initiative : 17, maxHitPoints : 40, currentHitPoints : 40, isHidden: false},
-        {id : 0, name : "Dev", armorClass : 10, initiative : 13, maxHitPoints : 40, currentHitPoints : 40, isHidden: false},
-        {id : 3, name : "Div", armorClass : 10, initiative : 4, maxHitPoints : 40, currentHitPoints : 40, isHidden: false},
-    ], 
-    currentActorID: 5, 
-    currentTurnIndex: 0,
-    nextID: 6
+export function Main() {
+    const room = useSelector((state) => state.room.room);
+
+    return (
+        <>
+            {room ? (
+            <>
+                <Header />
+                <ActorList />
+            </>
+            ):(
+            <>
+                <Header />
+                <LoginPage />
+            </>
+            )}
+        </>
+    )
 }
 
-export class Turns extends Component {
-    state = {
-        turns: {
-            actors: [],
-            nextID: 0,
-            currentTurnIndex: 0,
-            currentActorID: 0,
-        },
-        room: '',
-        isServer: false,
-        inRoom: false,
-    }
-
-    startRoom() {
+/*    startRoom() {
         const room = generateCode();
         [this.send, this.peerError, this.peerClose] = usePeer(true, room, this.parseMessage);
         if (room === 'tester') {
@@ -156,3 +150,4 @@ export class Turns extends Component {
         );
     }
 }
+*/
