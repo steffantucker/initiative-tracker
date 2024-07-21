@@ -1,44 +1,26 @@
 import { Peer } from 'peerjs';
 import { generateCode } from '../lib/Utils';
 
+const testroom = "scorpius";
+
 export function peerMiddleware() {
     console.log('peer middleware setup');
     let peer;
     let peers = [];
     const options = {
         debug: 3,
-        config: {
-            'iceServers': [
-                {
-                  urls: "stun:relay.metered.ca:80",
-                },
-                {
-                  urls: "turn:relay.metered.ca:80",
-                  username: "2c8a6acee3dac9800e8d96d6",
-                  credential: "Ih0yQ4v/06Vp2RFa",
-                },
-                {
-                  urls: "turn:relay.metered.ca:443",
-                  username: "2c8a6acee3dac9800e8d96d6",
-                  credential: "Ih0yQ4v/06Vp2RFa",
-                },
-                {
-                  urls: "turn:relay.metered.ca:443?transport=tcp",
-                  username: "2c8a6acee3dac9800e8d96d6",
-                  credential: "Ih0yQ4v/06Vp2RFa",
-                },
-            ],
-        }
     }
     let isServer = false;
     let room;
 
     const peerClientSetup = () => {
-        peer = new Peer(options);
+        peer = new Peer(room+"1", options);
         console.log(peer);
         peer.on('open', onOpen);
         peer.on('error', onError);
+        console.log(room)
         const conn = peer.connect(room)
+        conn.on('open', () => conn.send("test"));
         conn.on('data', (data) => storeAPI.dispatch({type: 'turns/message', payload: data}));
         conn.on('close', () => peers = peers.filter((c) => c.peer !== conn.peer));
         peers.push(conn);
@@ -51,12 +33,15 @@ export function peerMiddleware() {
         peer.on('error', onError);
         peer.on('connection', (conn) => {
             console.log('new connection', conn);
+            conn.on('open', () => {
+                peers.push(conn);
+                conn.send('hello');
+            });
             conn.on('data', (data) => {
                 storeAPI.dispatch({type: 'turns/message', payload: data});
                 peers.forEach((c) => c.peer !== conn.peer ? c.send(data) : null);
             });
             conn.on('close', peers = peers.filter((c) => c.peer !== conn.peer));
-            peers.push(conn);
         });
     }
 
@@ -77,12 +62,13 @@ export function peerMiddleware() {
         console.log(action);
         switch (action.type) {
             case 'room/join':
-                if (action.payload === 'tester') {
-                    room = tester;
+                if (action.payload === testroom) {
+                    room = testroom;
+                    isServer = true;
                     peerServerSetup();
                     break;
                 }
-                room = (action.payload === 'testconnect') ? 'tester' : action.payload;
+                room = (action.payload === testroom+"connect") ? testroom : action.payload;
                 peerClientSetup();
                 break;
             case 'room/create':
